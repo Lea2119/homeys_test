@@ -38,8 +38,12 @@ const addNotification = () => {
   };
 
   notifications.value.push(newNotification);
-};
 
+  // Limit to 5 notifications by deleting the oldest one
+  if (notifications.value.length > 5) {
+    notifications.value.shift();
+  }
+};
 // Function to remove a notification
 const handleCloseNotification = (id) => {
   notifications.value = notifications.value.filter(
