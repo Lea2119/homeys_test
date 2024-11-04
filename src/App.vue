@@ -6,20 +6,28 @@
         v-for="notification in notifications"
         :key="notification.id"
         :status="notification.status"
-        @close-notification="handleCloseNotification(notification.id)"
+        @close-notification="
+          notificationsStore.deleteNotification(notification.id)
+        "
       >
-        <p>{{ notification.message }}</p>
+        {{ notification.message }}
       </BaseNotification>
     </div>
   </main>
 </template>
 
 <script setup>
-import { ref } from "vue";
-import BaseNotification from "@/components/BaseNotification.vue";
+import { computed } from "vue";
+import { useNotificationsStore } from "@/stores/notifications";
+import BaseNotification from "./components/BaseNotification.vue";
 
-const notifications = ref([]);
+// Access the notifications store
+const notificationsStore = useNotificationsStore();
 
+// Get reactive notifications
+const notifications = computed(() => notificationsStore.getAllNotifications);
+
+// Types of notifications possible
 const notificationTypes = [
   { status: "success", message: "Operation completed successfully! 🌟" },
   { status: "info", message: "Here is some information for you. 👩‍💻" },
@@ -37,18 +45,14 @@ const addNotification = () => {
     id: Date.now().toString(),
   };
 
-  notifications.value.push(newNotification);
+  // Add the notification to the store
+  notificationsStore.createNotification(newNotification);
 
   // Limit to 5 notifications by deleting the oldest one
   if (notifications.value.length > 5) {
-    notifications.value.shift();
+    const oldestNotificationId = notifications.value[0].id;
+    notificationsStore.deleteNotification(oldestNotificationId);
   }
-};
-// Function to remove a notification
-const handleCloseNotification = (id) => {
-  notifications.value = notifications.value.filter(
-    (notification) => notification.id !== id
-  );
 };
 </script>
 
