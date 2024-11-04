@@ -38,8 +38,6 @@ const addNotification = () => {
   };
 
   notifications.value.push(newNotification);
-  console.log("Notification added:", newNotification);
-  console.log("Current notifications:", notifications.value);
 };
 
 // Function to remove a notification
