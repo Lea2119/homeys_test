@@ -5,6 +5,7 @@
         v-for="notification in notifications"
         :key="notification.id"
         :status="notification.status"
+        @close-notification="handleCloseNotification(notification.id)"
       >
         <p>{{ notification.message }}</p>
       </BaseNotification>
@@ -13,9 +14,10 @@
 </template>
 
 <script setup>
+import { ref } from "vue";
 import BaseNotification from "@/components/BaseNotification.vue";
 
-const notifications = [
+const notifications = ref([
   {
     id: 1,
     status: "error",
@@ -36,7 +38,13 @@ const notifications = [
     status: "info",
     message: "Here is some information for you. 👩‍💻",
   },
-];
+]);
+
+const handleCloseNotification = (id) => {
+  notifications.value = notifications.value.filter(
+    (notification) => notification.id !== id
+  );
+};
 </script>
 
 <style scoped>

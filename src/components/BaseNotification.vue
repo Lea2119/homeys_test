@@ -3,7 +3,7 @@
     <div class="notification-header">
       <img :src="icon" alt="icon" />
       <p class="notification-title">{{ title }}</p>
-      <button class="close-button">
+      <button class="close-button" @click="$emit('close-notification')">
         <img :src="CloseIcon" alt="close" />
       </button>
     </div>
@@ -34,6 +34,8 @@ const props = defineProps({
     required: true,
   },
 });
+
+const emit = defineEmits(["close-notification"]);
 
 const config = computed(() => NOTIFICATION_STATUS_CONFIG[props.status]);
 const icon = computed(() => config.value.icon);
