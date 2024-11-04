@@ -1,5 +1,6 @@
 <template>
   <main>
+    <button @click="addNotification">Show Notification</button>
     <div class="notifications-container">
       <BaseNotification
         v-for="notification in notifications"
@@ -17,29 +18,31 @@
 import { ref } from "vue";
 import BaseNotification from "@/components/BaseNotification.vue";
 
-const notifications = ref([
-  {
-    id: 1,
-    status: "error",
-    message: "An error occurred. Please try again. 🙀",
-  },
-  {
-    id: 2,
-    status: "success",
-    message: "Operation completed successfully! 🌟",
-  },
-  {
-    id: 3,
-    status: "warning",
-    message: "This is a warning. Please be careful! 🚨",
-  },
-  {
-    id: 4,
-    status: "info",
-    message: "Here is some information for you. 👩‍💻",
-  },
-]);
+const notifications = ref([]);
 
+const notificationTypes = [
+  { status: "success", message: "Operation completed successfully! 🌟" },
+  { status: "info", message: "Here is some information for you. 👩‍💻" },
+  { status: "warning", message: "This is a warning. Please be careful! 🚨" },
+  { status: "error", message: "An error occurred. Please try again. 🙀" },
+];
+
+// Function to add a random notification
+const addNotification = () => {
+  const randomNotification =
+    notificationTypes[Math.floor(Math.random() * notificationTypes.length)];
+
+  const newNotification = {
+    ...randomNotification,
+    id: Date.now().toString(),
+  };
+
+  notifications.value.push(newNotification);
+  console.log("Notification added:", newNotification);
+  console.log("Current notifications:", notifications.value);
+};
+
+// Function to remove a notification
 const handleCloseNotification = (id) => {
   notifications.value = notifications.value.filter(
     (notification) => notification.id !== id
@@ -49,8 +52,16 @@ const handleCloseNotification = (id) => {
 
 <style scoped>
 .notifications-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  max-width: 300px;
+  height: 100vh;
   display: flex;
-  flex-direction: column;
-  gap: 16px;
+  flex-direction: column-reverse;
+  align-items: flex-start;
+  padding: 10px;
+  gap: 10px;
 }
 </style>
